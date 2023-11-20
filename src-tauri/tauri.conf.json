@@ -11,6 +11,7 @@
     "version": "0.0.0"
   },
   "tauri": {
+    "macOSPrivateApi": true,
     "systemTray": {
       "iconPath": "icons/status-icon.ico",
       "iconAsTemplate": true,
@@ -27,7 +28,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.dev",
+      "identifier": "com.dimaportenko.code-helper",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",

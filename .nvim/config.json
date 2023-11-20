@@ -1,5 +1,6 @@
 {
   "commands": {
-    "dev": "yarn tauri dev"
+    "dev": "yarn tauri dev",
+    "build": "cargo tauri build"
    }
 }
