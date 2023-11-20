@@ -12,7 +12,7 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
-const SHORTCUT_CAPTURE: &str = "Command+Option+l";
+const SHORTCUT_CAPTURE: &str = "Command+Ctrl+a";
 
 fn system_tray() -> SystemTray {
     SystemTray::new().with_menu(
@@ -40,14 +40,10 @@ fn toggle_overlay_window(app: &tauri::AppHandle) {
         // if overlay not exist create new
         let overlay =
             tauri::WindowBuilder::new(app, "overlay", tauri::WindowUrl::App("overlay.html".into()))
-                .title("Overlay")
-                // .maximized(true)
-                // .minimizable(true)
                 .resizable(false)
                 .transparent(true)
                 .decorations(false)
                 .position(0.0, 0.0)
-                // .fullscreen(true)
                 .build()
                 .unwrap();
 

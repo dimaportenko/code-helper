@@ -3,13 +3,25 @@ import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 
-function App() {
+type Props = {
+  windowId?: string;
+};
+
+function App({ windowId }: Props) {
   const [greetMsg, setGreetMsg] = useState("");
   const [name, setName] = useState("");
 
   async function greet() {
     // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
     setGreetMsg(await invoke("greet", { name }));
+  }
+
+  if (windowId === "overlay") {
+    return (
+      <div>
+        <h1>Overlay</h1>
+      </div>
+    );
   }
 
   return (
