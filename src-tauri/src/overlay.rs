@@ -1,4 +1,4 @@
-use tauri::{Size, Manager};
+use tauri::{Manager, Size};
 
 pub fn toggle_overlay_window(app: &tauri::AppHandle) {
     let overlay = app.get_window("overlay");
@@ -37,5 +37,11 @@ pub fn toggle_overlay_window(app: &tauri::AppHandle) {
         // overlay.set_size(overlay.current_monitor().size());
         // show it
         overlay.show().unwrap();
+        
+        let result = overlay.set_focus();
+        if let Err(e) = result {
+            println!("Error: {}", e);
+        }
+
     }
 }
