@@ -1,27 +1,38 @@
-use tauri::{Manager, Size};
+use tauri::{Manager, PhysicalPosition};
 
 pub fn toggle_overlay_window(app: &tauri::AppHandle) {
     let overlay = app.get_window("overlay");
-    // if overlay exist
     if let Some(overlay) = overlay {
-        // if overlay is visible
         if overlay.is_visible().unwrap() {
-            // hide it
             overlay.hide().unwrap();
         } else {
-            // show it
             overlay.show().unwrap();
         }
     } else {
-        // if overlay not exist create new
         let overlay =
-            tauri::WindowBuilder::new(app, "overlay", tauri::WindowUrl::App("overlay.html".into()))
+            tauri::WindowBuilder::new(app, "overlay", tauri::WindowUrl::App("index.html?window_id=overlay".into()))
+                .always_on_top(true)
                 .resizable(false)
                 .transparent(true)
                 .decorations(false)
-                .position(0.0, 0.0)
                 .build()
                 .unwrap();
+
+        #[cfg(target_os = "macos")]
+        {
+            use cocoa::appkit::{NSMainMenuWindowLevel, NSWindow};
+            use cocoa::base::id;
+            let ns_win = overlay.ns_window().unwrap() as id;
+            unsafe {
+                // kCGMainMenuWindowLevelKey: NSInteger = 8;
+                // kCGScreenSaverWindowLevelKey: NSInteger = 13;
+                // 13 - 8 = 5
+                ns_win.setLevel_(((NSMainMenuWindowLevel + 5) as u64).try_into().unwrap());
+            }
+        }
+
+        let pos = PhysicalPosition::new(0.0, 0.0);
+        let _ = overlay.set_position(pos);
 
         let monitor = match overlay.current_monitor() {
             Ok(mon) => mon,
@@ -29,19 +40,14 @@ pub fn toggle_overlay_window(app: &tauri::AppHandle) {
         }
         .unwrap();
 
-        let physical_size = monitor.size().clone();
-        let size = Size::from(physical_size);
-        // let size = LogicalSize
-        let _ = overlay.set_size(size);
+        let physical_size = monitor.size();
+        let _ = overlay.set_size(*physical_size);
 
-        // overlay.set_size(overlay.current_monitor().size());
-        // show it
         overlay.show().unwrap();
-        
+
         let result = overlay.set_focus();
         if let Err(e) = result {
             println!("Error: {}", e);
         }
-
     }
 }

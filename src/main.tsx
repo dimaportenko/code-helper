@@ -4,10 +4,12 @@ import App from "./App";
 
 const rootElement = document.getElementById("root") as HTMLElement;
 
-const windowId = rootElement.dataset.windowId;
+const queryParams = new URLSearchParams(window.location.search);
+const window_id = queryParams.get('window_id');
+
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <App windowId={windowId} />
+    <App windowId={window_id} />
   </React.StrictMode>
 );

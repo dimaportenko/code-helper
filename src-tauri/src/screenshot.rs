@@ -3,7 +3,7 @@ use std::time::Instant;
 
 fn capture_screen() {
     let start = Instant::now();
-    let screens = Screen::all().unwrap();
+    let _screens = Screen::all().unwrap();
 
     // for screen in screens {
     //     println!("capturer {screen:?}");
