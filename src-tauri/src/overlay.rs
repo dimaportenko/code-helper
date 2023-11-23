@@ -7,6 +7,7 @@ pub fn toggle_overlay_window(app: &tauri::AppHandle) {
             overlay.hide().unwrap();
         } else {
             overlay.show().unwrap();
+            overlay.set_focus().unwrap();
         }
     } else {
         let overlay =
