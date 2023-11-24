@@ -1,4 +1,4 @@
-use tauri::{AppHandle, Manager, PhysicalPosition, Window};
+use tauri::{AppHandle, Manager, PhysicalPosition, Window, command};
 
 fn toggle_window(overlay: &Window) {
     if overlay.is_visible().unwrap() {
@@ -57,6 +57,11 @@ fn create_overlay_window(app: &AppHandle) {
     if let Err(e) = result {
         println!("Error: {}", e);
     }
+}
+
+#[command]
+pub fn stop_screenshot(app_handle: AppHandle) {
+    toggle_overlay_window(&app_handle);
 }
 
 // FIXME: crash on click

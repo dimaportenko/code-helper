@@ -1,8 +1,11 @@
 import styles from "./App.module.css";
 import { invoke } from "@tauri-apps/api";
 import RectangleSelection from "./selection/RectangleSelection";
+import { useHandleEsc } from "./hooks/useHandleEsc";
 
 export const OverlayAppContainer = () => {
+  useHandleEsc();
+
   return (
     <div className={styles.container}>
       <RectangleSelection

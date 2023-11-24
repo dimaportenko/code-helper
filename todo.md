@@ -11,7 +11,7 @@
 - [x] save screenshot to appropriate location
 - [ ] display screenshot in main window
 
-- [ ] add cancel screenshot on ESC press
+- [x] add cancel screenshot on ESC press
 - [ ] compress the screenshot image
 - [ ] add screenshot sound
 

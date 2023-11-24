@@ -1,6 +1,6 @@
 use screenshots::Screen;
 use serde::Deserialize;
-use tauri::{api::path::app_data_dir, AppHandle};
+use tauri::{api::path::app_data_dir, AppHandle, Manager};
 use std::{time::Instant, path::PathBuf, fs};
 
 use crate::overlay::toggle_overlay_window;
@@ -70,6 +70,10 @@ fn get_screenshot_path(app_handle: &AppHandle) -> PathBuf {
 
 #[tauri::command]
 pub fn screenshot(app_handle: AppHandle, coords: SelectionCoords) {
+    let overlay = app_handle.get_window("overlay").unwrap();
+    if !overlay.is_visible().unwrap() {
+        return;
+    }
     
     let screenshot_path = get_screenshot_path(&app_handle);
     println!("app_dir: {:?}", screenshot_path);

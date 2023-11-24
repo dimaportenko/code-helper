@@ -3,6 +3,7 @@
 
 use configuration::{setup_shortcuts, on_system_tray_event, system_tray};
 use screenshot::screenshot;
+use overlay::stop_screenshot;
 
 mod configuration;
 mod overlay;
@@ -16,7 +17,7 @@ fn main() {
         })
         .system_tray(system_tray())
         .on_system_tray_event(on_system_tray_event)
-        .invoke_handler(tauri::generate_handler![screenshot])
+        .invoke_handler(tauri::generate_handler![screenshot, stop_screenshot])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
