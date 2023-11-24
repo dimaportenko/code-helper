@@ -15,7 +15,7 @@
 - [ ] compress the screenshot image
 - [ ] add screenshot sound
 
-- [ ] FIX: remove cursor from screenshot
+- [x] FIX: remove cursor from screenshot
 - [ ] style overlay window
 - [ ] focus overlay window
 

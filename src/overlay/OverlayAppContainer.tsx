@@ -1,18 +1,27 @@
-import styles from "./App.module.css";
 import { invoke } from "@tauri-apps/api";
-import RectangleSelection from "./selection/RectangleSelection";
+import styles from "./App.module.css";
+import RectangleSelection, { AreaCoords } from "./selection/RectangleSelection";
 import { useHandleEsc } from "./hooks/useHandleEsc";
+import { hideCursor, showCursor } from "./utils/cursor";
+
+const onSelectionEnd = async (coords: AreaCoords) => {
+  try {
+    console.log("coords", coords);
+    hideCursor();
+    await invoke("screenshot", { coords });
+    showCursor();
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 export const OverlayAppContainer = () => {
   useHandleEsc();
 
   return (
-    <div className={styles.container}>
+    <div id="container" className={styles.container}>
       <RectangleSelection
-        onSelectionEnd={(coords) => {
-          console.log("coords", coords);
-          invoke("screenshot", { coords });
-        }}
+        onSelectionEnd={onSelectionEnd}
         style={{
           backgroundColor: "rgba(0,0,255,0.4)",
           borderColor: "blue",

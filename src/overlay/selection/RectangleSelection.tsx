@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import "./index.css";
 
-type AreaCoords = {
+export type AreaCoords = {
   origin: [number, number];
   target: [number, number];
 };
