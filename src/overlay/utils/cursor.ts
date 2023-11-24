@@ -5,5 +5,5 @@ export const hideCursor = () => {
 
 export const showCursor = () => {
   const container = document.getElementById("container");
-  if (container) container.style.cursor = "default";
+  if (container) container.style.cursor = "crosshair";
 };
