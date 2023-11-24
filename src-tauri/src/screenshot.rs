@@ -1,8 +1,11 @@
 use screenshots::Screen;
 use serde::Deserialize;
-use std::time::Instant;
+use tauri::{api::path::app_data_dir, AppHandle};
+use std::{time::Instant, path::PathBuf, fs};
 
-fn capture_screen(selection: &SelectionCoords) {
+use crate::overlay::toggle_overlay_window;
+
+fn capture_screen(selection: &SelectionCoords, file_path: &PathBuf) {
     let start = Instant::now();
     let screen = Screen::from_point(0, 0).unwrap();
     println!("capturer {screen:?}");
@@ -28,9 +31,13 @@ fn capture_screen(selection: &SelectionCoords) {
     }
 
     // FIXME: crash on 0 width or height
+    if (width == 0) || (height == 0) {
+        return;
+    }
+    
     let image = screen.capture_area(x, y, width, height).unwrap();
     // FIXME: save file to proper location
-    image.save("target/capture_display_with_point.png").unwrap();
+    image.save(file_path).unwrap();
     println!("Runtime: {:?}", start.elapsed());
 }
 
@@ -40,9 +47,36 @@ pub struct SelectionCoords {
     pub target: (i32, i32),
 }
 
+fn get_screenshot_path(app_handle: &AppHandle) -> PathBuf {
+    let config = app_handle.config();
+    // FIXME: show error message to the user
+    let mut app_dir = app_data_dir(&config).unwrap();
+    app_dir.push("screenshots");
+
+    if !app_dir.exists() {
+        match fs::create_dir_all(&app_dir) {
+            Ok(_) => println!("Directories created successfully"),
+            Err(e) => println!("Error creating directories: {}", e),
+        }
+    } else {
+        println!("Path already exists");
+    }
+    // generate timestamp screenshot name 
+    let screenshot_name = chrono::Local::now().format("%Y-%m-%d_%H-%M-%S.png").to_string();
+    app_dir.push(screenshot_name);
+
+    app_dir
+}
+
 #[tauri::command]
-pub fn screenshot(coords: SelectionCoords) {
+pub fn screenshot(app_handle: AppHandle, coords: SelectionCoords) {
+    
+    let screenshot_path = get_screenshot_path(&app_handle);
+    println!("app_dir: {:?}", screenshot_path);
+
     println!("selection coords: {:?}", coords);
     println!("screenshot");
-    capture_screen(&coords);
+    capture_screen(&coords, &screenshot_path);
+
+    toggle_overlay_window(&app_handle);
 }

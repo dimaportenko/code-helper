@@ -26,6 +26,9 @@
       },
       "globalShortcut": {
         "all": true
+      },
+      "window": {
+        "setCursorVisible": true
       }
     },
     "bundle": {

@@ -49,6 +49,10 @@ fn create_overlay_window(app: &AppHandle) {
 
     overlay.show().unwrap();
 
+    // let hide_result = overlay.set_cursor_visible(false);
+    // if let Err(e) = hide_result {
+    //     println!("Error: {}", e);
+    // }
     let result = overlay.set_focus();
     if let Err(e) = result {
         println!("Error: {}", e);
@@ -57,10 +61,17 @@ fn create_overlay_window(app: &AppHandle) {
 
 // FIXME: crash on click
 pub fn toggle_overlay_window(app: &AppHandle) {
+    let main = app.get_window("main").unwrap();
     let overlay = app.get_window("overlay");
     if let Some(overlay) = overlay {
+        if overlay.is_visible().unwrap() {
+            main.show().unwrap();
+        } else {
+            main.hide().unwrap();
+        }
         toggle_window(&overlay);
     } else {
+        main.hide().unwrap();
         create_overlay_window(app);
     }
 }

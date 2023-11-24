@@ -8,12 +8,6 @@ mod configuration;
 mod overlay;
 mod screenshot;
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
@@ -22,7 +16,7 @@ fn main() {
         })
         .system_tray(system_tray())
         .on_system_tray_event(on_system_tray_event)
-        .invoke_handler(tauri::generate_handler![greet, screenshot])
+        .invoke_handler(tauri::generate_handler![screenshot])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
