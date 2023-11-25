@@ -41,5 +41,5 @@ pub fn setup_shortcuts(app: &tauri::App) {
         .register(SHORTCUT_CAPTURE, move || {
             toggle_overlay_window(&app_handle_clone);
         })
-        .expect("Failed to register global shortcut");
+        .expect("ERROR: Failed to register global shortcut");
 }

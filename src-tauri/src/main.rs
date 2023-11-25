@@ -25,5 +25,5 @@ fn main() {
             open_app_directory
         ])
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect("ERROR: error while running tauri application");
 }
