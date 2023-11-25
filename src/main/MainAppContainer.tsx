@@ -1,18 +1,14 @@
+import { invoke } from "@tauri-apps/api";
 import "./App.css";
 
-import { invoke } from "@tauri-apps/api";
-import { useState } from "react";
 import reactLogo from "../assets/react.svg";
 
 export const MainAppContainer = () => {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
-
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name }));
-  }
-
+  const handleOpenAppDirectory = () => {
+    invoke("open_app_directory", {subdirectory: "screenshots"}).catch((err) =>
+      console.error("Error opening app directory:", err),
+    );
+  };
   return (
     <div className="container">
       <h1>Welcome to Tauri!</h1>
@@ -29,24 +25,11 @@ export const MainAppContainer = () => {
         </a>
       </div>
 
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-
-      <p>{greetMsg}</p>
+      <div>
+        <button onClick={handleOpenAppDirectory}>
+          Open Screenshots Directory
+        </button>
+      </div>
     </div>
   );
 };
