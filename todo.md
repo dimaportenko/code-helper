@@ -11,7 +11,7 @@
 - [x] save screenshot to appropriate location
 - [x] add tailwindcss 
 - [x] display screenshots list in main window
-- [ ] add screenshot selection 
+- [x] add screenshot selection 
 
 - [x] add cancel screenshot on ESC press
 - [ ] compress the screenshot image
