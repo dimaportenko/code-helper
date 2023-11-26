@@ -1,6 +1,6 @@
 import { appWindow } from "@tauri-apps/api/window";
 import { convertFileSrc, invoke } from "@tauri-apps/api/tauri";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { classNames } from "../../utils/classNames";
 
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
 export const ScreenshotList = ({ onSelectedChange }: Props) => {
   const [selected, setSelected] = useState<number>(0); // index of filePaths[
   const [filePaths, setFilePaths] = useState<string[]>([]);
+  const onFirstLoad = useRef(false);
 
   useEffect(() => {
     const getFilePaths = async () => {
@@ -19,9 +20,6 @@ export const ScreenshotList = ({ onSelectedChange }: Props) => {
           const fileSrcs = (files as string[]).map((file) =>
             convertFileSrc(file),
           );
-          if (fileSrcs.length > 0) {
-            onSelectedChange(fileSrcs[0]);
-          }
           setFilePaths(fileSrcs);
         })
         .catch((error) =>
@@ -44,6 +42,18 @@ export const ScreenshotList = ({ onSelectedChange }: Props) => {
       unlisten();
     };
   }, []);
+
+  useEffect(() => {
+
+    if (filePaths.length) {
+      if (!onFirstLoad.current) {
+        setSelected(0);
+        onSelectedChange(filePaths[0]);
+        onFirstLoad.current = true;
+      }
+    }
+
+  }, [filePaths]);
 
   return (
     <div className="flex flex-col gap-4">

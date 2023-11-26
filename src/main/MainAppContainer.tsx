@@ -1,7 +1,6 @@
 import { invoke } from "@tauri-apps/api";
 import "./App.css";
 
-import reactLogo from "../assets/react.svg";
 import { ScreenshotList } from "./screenshots/ScreenshotList";
 import { useState } from "react";
 
