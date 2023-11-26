@@ -1,15 +1,25 @@
-use std::process::Command as ProcessCommand;
+use std::{path::PathBuf, process::Command as ProcessCommand};
 use tauri::{api::path::app_data_dir, command, AppHandle};
 
-#[command]
-pub fn open_app_directory(app: AppHandle, subdirectory: Option<String>) {
+pub fn get_app_dirctory(app: &AppHandle, subdirectory: Option<String>) -> Option<PathBuf> {
     let config = app.config();
-    let mut path = app_data_dir(&config).expect("ERROR: Can't get app directory");
+    let path = app_data_dir(&config);
 
+    if None == path {
+        return None;
+    }
+
+    let mut path = path.unwrap();
     if let Some(subdirectory) = subdirectory {
         path.push(subdirectory);
     }
 
+    Some(path)
+}
+
+#[command]
+pub fn open_app_directory(app: AppHandle, subdirectory: Option<String>) {
+    let path = get_app_dirctory(&app, subdirectory).expect("Error: can't get app directory");
     if path.is_dir() {
         // Open the directory using the system's default file explorer
         #[cfg(target_os = "windows")]

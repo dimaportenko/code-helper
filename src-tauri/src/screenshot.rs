@@ -1,9 +1,9 @@
 use screenshots::Screen;
 use serde::Deserialize;
-use tauri::{api::path::app_data_dir, AppHandle, Manager};
-use std::{time::Instant, path::PathBuf, fs};
+use std::{fs, path::PathBuf, time::Instant};
+use tauri::{AppHandle, Manager};
 
-use crate::overlay::toggle_overlay_window;
+use crate::{app_directory::get_app_dirctory, overlay::toggle_overlay_window};
 
 fn capture_screen(selection: &SelectionCoords, file_path: &PathBuf) {
     let start = Instant::now();
@@ -34,7 +34,7 @@ fn capture_screen(selection: &SelectionCoords, file_path: &PathBuf) {
     if (width == 0) || (height == 0) {
         return;
     }
-    
+
     let image = screen.capture_area(x, y, width, height).unwrap();
     // FIXME: save file to proper location
     image.save(file_path).unwrap();
@@ -48,10 +48,7 @@ pub struct SelectionCoords {
 }
 
 fn get_screenshot_path(app_handle: &AppHandle) -> PathBuf {
-    let config = app_handle.config();
-    // FIXME: show error message to the user
-    let mut app_dir = app_data_dir(&config).unwrap();
-    app_dir.push("screenshots");
+    let mut app_dir = get_app_dirctory(app_handle, Some("screenshots".to_string())).unwrap();
 
     if !app_dir.exists() {
         match fs::create_dir_all(&app_dir) {
@@ -61,8 +58,10 @@ fn get_screenshot_path(app_handle: &AppHandle) -> PathBuf {
     } else {
         println!("Path already exists");
     }
-    // generate timestamp screenshot name 
-    let screenshot_name = chrono::Local::now().format("%Y-%m-%d_%H-%M-%S.png").to_string();
+    // generate timestamp screenshot name
+    let screenshot_name = chrono::Local::now()
+        .format("%Y-%m-%d_%H-%M-%S.png")
+        .to_string();
     app_dir.push(screenshot_name);
 
     app_dir
@@ -74,7 +73,7 @@ pub fn screenshot(app_handle: AppHandle, coords: SelectionCoords) {
     if !overlay.is_visible().unwrap() {
         return;
     }
-    
+
     let screenshot_path = get_screenshot_path(&app_handle);
     println!("app_dir: {:?}", screenshot_path);
 

@@ -15,9 +15,9 @@
 - [ ] compress the screenshot image
 - [ ] add screenshot sound
 
-- [x] FIX: remove cursor from screenshot
-- [ ] style overlay window
-- [ ] focus overlay window
+- [ ] FIX: remove cursor from screenshot
+- [x] style overlay window
+- [x] focus overlay window
 
 
 - [ ] review all unwraps and add error handling
