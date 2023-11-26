@@ -4,7 +4,7 @@
 use app_directory::open_app_directory;
 use configuration::{on_system_tray_event, setup_shortcuts, system_tray};
 use overlay::stop_screenshot;
-use screenshot::screenshot;
+use screenshot::{screenshot, get_screenshot_files};
 
 mod app_directory;
 mod configuration;
@@ -22,7 +22,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             screenshot,
             stop_screenshot,
-            open_app_directory
+            open_app_directory,
+            get_screenshot_files
         ])
         .run(tauri::generate_context!())
         .expect("ERROR: error while running tauri application");
