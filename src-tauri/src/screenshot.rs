@@ -4,7 +4,7 @@ use std::{fs, path::PathBuf, time::Instant};
 use tauri::{command, AppHandle, Manager};
 
 use crate::{
-    app_directory::{get_app_directory, list_files_in_directory_sorted},
+    app_directory::{get_app_directory, list_images_in_directory_sorted},
     overlay::toggle_overlay_window,
 };
 
@@ -89,5 +89,5 @@ pub fn screenshot(app_handle: AppHandle, coords: SelectionCoords) {
 
 #[command]
 pub fn get_screenshot_files(app: AppHandle) -> Option<Vec<String>> {
-    list_files_in_directory_sorted(&app, Some("screenshots".to_string()))
+    list_images_in_directory_sorted(&app, Some("screenshots".to_string()))
 }

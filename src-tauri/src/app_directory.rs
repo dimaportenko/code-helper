@@ -1,7 +1,7 @@
-use std::{path::PathBuf, process::Command as ProcessCommand, fs, time::SystemTime};
+use std::{fs, path::PathBuf, process::Command as ProcessCommand, time::SystemTime};
 use tauri::{api::path::app_data_dir, command, AppHandle};
 
-pub fn list_files_in_directory_sorted(
+pub fn list_images_in_directory_sorted(
     app: &AppHandle,
     subdirectory: Option<String>,
 ) -> Option<Vec<String>> {
@@ -13,6 +13,26 @@ pub fn list_files_in_directory_sorted(
                 let mut entries: Vec<_> = fs::read_dir(path)
                     .expect("Failed to read directory")
                     .filter_map(|res| res.ok())
+                    .filter(|entry| {
+                        if let Ok(metadata) = entry.metadata() {
+                            if metadata.is_file() {
+                                // Filter by image file extensions
+                                return entry
+                                    .path()
+                                    .extension()
+                                    .map(|ext| {
+                                        let ext = ext.to_string_lossy().to_lowercase();
+                                        ext == "jpg"
+                                            || ext == "jpeg"
+                                            || ext == "png"
+                                            || ext == "gif"
+                                            || ext == "bmp"
+                                    })
+                                    .unwrap_or(false);
+                            }
+                        }
+                        false
+                    })
                     .filter(|entry| entry.path().is_file())
                     .map(|entry| {
                         let path = entry.path();

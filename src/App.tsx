@@ -1,3 +1,4 @@
+import "./index.css";
 import { OverlayAppContainer } from "./overlay/OverlayAppContainer";
 import { MainAppContainer } from "./main/MainAppContainer";
 

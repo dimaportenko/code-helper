@@ -9,7 +9,9 @@
 - [x] hide main window when open overlay
 - [x] on screenshot done close overlay
 - [x] save screenshot to appropriate location
-- [ ] display screenshot in main window
+- [x] add tailwindcss 
+- [x] display screenshots list in main window
+- [ ] add screenshot selection 
 
 - [x] add cancel screenshot on ESC press
 - [ ] compress the screenshot image
