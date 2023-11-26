@@ -1,3 +1,4 @@
+import { appWindow } from "@tauri-apps/api/window";
 import { convertFileSrc, invoke } from "@tauri-apps/api/tauri";
 import { useEffect, useState } from "react";
 import { classNames } from "../../utils/classNames";
@@ -11,19 +12,37 @@ export const ScreenshotList = ({ onSelectedChange }: Props) => {
   const [filePaths, setFilePaths] = useState<string[]>([]);
 
   useEffect(() => {
-    invoke("get_screenshot_files")
-      .then((files) => {
-        const fileSrcs = (files as string[]).map((file) =>
-          convertFileSrc(file),
+    const getFilePaths = async () => {
+      console.log("Getting file paths...");
+      invoke("get_screenshot_files")
+        .then((files) => {
+          const fileSrcs = (files as string[]).map((file) =>
+            convertFileSrc(file),
+          );
+          if (fileSrcs.length > 0) {
+            onSelectedChange(fileSrcs[0]);
+          }
+          setFilePaths(fileSrcs);
+        })
+        .catch((error) =>
+          console.error("Failed to get screenshot files:", error),
         );
-        if (fileSrcs.length > 0) {
-          onSelectedChange(fileSrcs[0]);
+    };
+
+    let unlisten = () => {};
+    appWindow
+      .onFocusChanged(({ payload: focused }) => {
+        if (focused) {
+          getFilePaths();
         }
-        setFilePaths(fileSrcs);
       })
-      .catch((error) =>
-        console.error("Failed to get screenshot files:", error),
-      );
+      .then((fn) => (unlisten = fn));
+
+    getFilePaths();
+
+    return () => {
+      unlisten();
+    };
   }, []);
 
   return (
