@@ -5,11 +5,13 @@ use app_directory::open_app_directory;
 use configuration::{on_system_tray_event, setup_shortcuts, system_tray};
 use overlay::stop_screenshot;
 use screenshot::{screenshot, get_screenshot_files};
+use open_ai::image_to_code;
 
 mod app_directory;
 mod configuration;
 mod overlay;
 mod screenshot;
+mod open_ai;
 
 fn main() {
     tauri::Builder::default()
@@ -23,7 +25,8 @@ fn main() {
             screenshot,
             stop_screenshot,
             open_app_directory,
-            get_screenshot_files
+            get_screenshot_files,
+            image_to_code
         ])
         .run(tauri::generate_context!())
         .expect("ERROR: error while running tauri application");
