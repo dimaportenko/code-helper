@@ -1,4 +1,5 @@
 import { appWindow } from "@tauri-apps/api/window";
+import { listen } from "@tauri-apps/api/event";
 import { convertFileSrc, invoke } from "@tauri-apps/api/tauri";
 import { useEffect, useRef, useState } from "react";
 import { classNames } from "../../utils/classNames";
@@ -12,21 +13,21 @@ export const ScreenshotList = ({ onSelectedChange }: Props) => {
   const [filePaths, setFilePaths] = useState<string[]>([]);
   const onFirstLoad = useRef(false);
 
-  useEffect(() => {
-    const getFilePaths = async () => {
-      console.log("Getting file paths...");
-      invoke("get_screenshot_files")
-        .then((files) => {
-          const fileSrcs = (files as string[]).map((file) =>
-            convertFileSrc(file),
-          );
-          setFilePaths(fileSrcs);
-        })
-        .catch((error) =>
-          console.error("Failed to get screenshot files:", error),
+  const getFilePaths = async () => {
+    console.log("Getting file paths...");
+    invoke("get_screenshot_files")
+      .then((files) => {
+        const fileSrcs = (files as string[]).map((file) =>
+          convertFileSrc(file),
         );
-    };
+        setFilePaths(fileSrcs);
+      })
+      .catch((error) =>
+        console.error("Failed to get screenshot files:", error),
+      );
+  };
 
+  useEffect(() => {
     let unlisten = () => {};
     appWindow
       .onFocusChanged(({ payload: focused }) => {
@@ -44,7 +45,21 @@ export const ScreenshotList = ({ onSelectedChange }: Props) => {
   }, []);
 
   useEffect(() => {
+    let unsibscribe = () => {};
+    listen("on_screenshot", () => {
+      getFilePaths().then(() => {
+        setSelected(0);
+        onSelectedChange(filePaths[0]);
+      });
+      onFirstLoad.current = false;
+    }).then((fn) => (unsibscribe = fn));
 
+    return () => {
+      unsibscribe();
+    };
+  }, []);
+
+  useEffect(() => {
     if (filePaths.length) {
       if (!onFirstLoad.current) {
         setSelected(0);
@@ -52,7 +67,6 @@ export const ScreenshotList = ({ onSelectedChange }: Props) => {
         onFirstLoad.current = true;
       }
     }
-
   }, [filePaths]);
 
   return (

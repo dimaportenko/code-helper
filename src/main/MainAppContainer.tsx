@@ -37,10 +37,6 @@ export const MainAppContainer = () => {
         <div className="flex flex-row">
           <img src={selectedScreenshot} alt="Screenshot" width={500} />
         </div>
-
-        <div></div>
-
-        <div></div>
       </div>
     </div>
   );

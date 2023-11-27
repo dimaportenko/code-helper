@@ -13,6 +13,9 @@
 - [x] display screenshots list in main window
 - [x] add screenshot selection 
 
+- [ ] add eslint and prettier
+- [ ] copy codesnap OpenAI logic
+
 - [x] add cancel screenshot on ESC press
 - [ ] compress the screenshot image
 - [ ] add screenshot sound

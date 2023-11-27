@@ -8,6 +8,8 @@ use crate::{
     overlay::toggle_overlay_window,
 };
 
+pub const ON_SCREENSHOT_EVENT: &str = "on_screenshot";
+
 fn capture_screen(selection: &SelectionCoords, file_path: &PathBuf) {
     let start = Instant::now();
     let screen = Screen::from_point(0, 0).unwrap();
@@ -83,6 +85,8 @@ pub fn screenshot(app_handle: AppHandle, coords: SelectionCoords) {
     println!("selection coords: {:?}", coords);
     println!("screenshot");
     capture_screen(&coords, &screenshot_path);
+
+    app_handle.emit_all(ON_SCREENSHOT_EVENT, screenshot_path).unwrap();
 
     toggle_overlay_window(&app_handle);
 }
