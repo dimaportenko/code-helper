@@ -1,33 +1,7 @@
 use reqwest;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use serde_json::{json, Value};
 use std::error::Error;
-
-#[derive(Serialize)]
-struct ImageUrl {
-    url: String,
-}
-
-#[derive(Serialize)]
-struct ImageMessage {
-    #[serde(rename = "type")]
-    message_type: String,
-    text: Option<String>,
-    image_url: Option<ImageUrl>,
-}
-
-#[derive(Serialize)]
-struct Message {
-    role: String,
-    content: Vec<ImageMessage>,
-}
-
-#[derive(Serialize)]
-struct RequestBody {
-    model: String,
-    messages: Vec<Message>,
-    max_tokens: u32,
-}
 
 #[derive(Deserialize, Debug)]
 struct ResponseChoice {
@@ -48,58 +22,33 @@ pub async fn send_image_to_open_ai(
     let url = "https://api.openai.com/v1/chat/completions";
     let client = reqwest::Client::new();
 
-    //   curl https://api.openai.com/v1/chat/completions \
-    // -H "Content-Type: application/json" \
-    // -H "Authorization: Bearer $OPENAI_API_KEY" \
-    // -d '{
-    //   "model": "gpt-4-vision-preview",
-    //   "messages": [
-    //     {
-    //       "role": "user",
-    //       "content": [
-    //         {
-    //           "type": "text",
-    //           "text": "What’s in this image?"
-    //         },
-    //         {
-    //           "type": "image_url",
-    //           "image_url": {
-    //             "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
-    //           }
-    //         }
-    //       ]
-    //     }
-    //   ],
-    //   "max_tokens": 300
-    // }'
-    let image_url = ImageUrl {
-        url: format!("data:image/png;base64,{}", base64_image),
-    };
-    let request_body = RequestBody {
-        model: "gpt-4-vision-preview".to_string(),
-        messages: vec![Message {
-            role: "user".to_string(),
-            content: vec![
-                ImageMessage {
-                    message_type: "text".to_string(),
-                    text: Some(prompt.to_string()),
-                    image_url: None,
-                },
-                ImageMessage {
-                    message_type: "image_url".to_string(),
-                    text: None,
-                    image_url: Some(image_url),
-                },
-            ],
-        }],
-        max_tokens: 3000,
-    };
+    let body = json!({
+        "model": "gpt-4-vision-preview",
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": prompt
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url":  {
+                            "url": format!("data:image/png;base64,{}", base64_image),
+                        }
+                    }
+                ]
+            }
+        ],
+        "max_tokens": 3000
+    });
 
-    println!("request_body: {:?}", json!(request_body));
+    println!("request_body: {:?}", json!(body));
 
     let res = client
         .post(url)
-        .json(&request_body)
+        .body(body.to_string())
         .header("Content-Type", "application/json")
         .header("Authorization", format!("Bearer {}", open_api_key))
         .send()
