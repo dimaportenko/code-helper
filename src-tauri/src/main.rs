@@ -12,6 +12,7 @@ mod configuration;
 mod overlay;
 mod screenshot;
 mod open_ai;
+mod utils;
 
 fn main() {
     tauri::Builder::default()
