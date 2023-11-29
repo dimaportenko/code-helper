@@ -14,7 +14,8 @@
 - [x] add screenshot selection 
 
 - [ ] add eslint and prettier
-- [ ] copy codesnap OpenAI logic
+- [x] copy codesnap OpenAI logic
+- [ ] display openAI result in the main window
 
 - [x] add cancel screenshot on ESC press
 - [ ] compress the screenshot image

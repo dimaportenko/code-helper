@@ -11,19 +11,26 @@ const handleOpenAppDirectory = () => {
   );
 };
 
-const generateCode = (filePath: string | undefined) => {
+const generateCode = (
+  filePath: string | undefined,
+  successCallback: (response: string) => void,
+) => {
   if (!filePath) {
     alert("No screenshot selected!");
     return;
   }
 
   console.log("Generating code for:", filePath);
-  invoke("image_to_code", { filePath }).catch((err) =>
-    console.error("Error: Can't generate code:", err),
-  );
+  invoke("image_to_code", { filePath })
+    .then((response) => {
+      successCallback(response as string);
+      console.log("Response:", response);
+    })
+    .catch((err) => console.error("Error: ", err));
 };
 
 export const MainAppContainer = () => {
+  const [response, setResponse] = useState<string | undefined>("");
   const [selectedScreenshot, setSelectedScreenshot] = useState<
     ScreenshotItem | undefined
   >();
@@ -44,7 +51,7 @@ export const MainAppContainer = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-start">
+      <div className="flex flex-col items-start gap-6">
         <h1>{selectedScreenshot?.assetPath.split("%2F").at(-1)}</h1>
 
         <div className="flex flex-row">
@@ -56,10 +63,26 @@ export const MainAppContainer = () => {
         </div>
 
         <div className="flex justify-center p-1 pt-2">
-          <button onClick={() => generateCode(selectedScreenshot?.filePath)}>
+          <button
+            onClick={() =>
+              generateCode(selectedScreenshot?.filePath, (response) => {
+                setResponse(response);
+              })
+            }
+          >
             Generate Code
           </button>
         </div>
+
+        <div>
+          <pre>
+            <p>{response}</p>
+          </pre>
+        </div>
+      </div>
+
+      <div id="preview">
+        <div dangerouslySetInnerHTML={{__html: response ?? ""}}></div>
       </div>
     </div>
   );

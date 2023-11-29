@@ -44,7 +44,7 @@ pub async fn send_image_to_open_ai(
         "max_tokens": 3000
     });
 
-    println!("request_body: {:?}", json!(body));
+    // println!("request_body: {:?}", json!(body));
 
     let res = client
         .post(url)
@@ -56,7 +56,7 @@ pub async fn send_image_to_open_ai(
 
     if res.status().is_success() {
         let response_body: OpenAIResponse = res.json().await?;
-        println!("response_body: {:?}", response_body);
+        // println!("response_body: {:?}", response_body);
         if let Some(error) = response_body.error {
             Err(format!("OpenAI Error: {:?}", error).into())
         } else if let Some(choices) = response_body.choices {
@@ -70,7 +70,7 @@ pub async fn send_image_to_open_ai(
             Err("No response from OpenAI".into())
         }
     } else {
-        println!("Request failed with status: {:?}", res);
+        // println!("Request failed with status: {:?}", res);
         Err(format!("Request failed with status: {}", res.status()).into())
     }
 }
