@@ -51,18 +51,19 @@ export const MainAppContainer = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-start gap-6">
+      <div className="flex flex-col items-start gap-6 max-w-[50%] overflow-y-auto">
+
         <h1>{selectedScreenshot?.assetPath.split("%2F").at(-1)}</h1>
 
         <div className="flex flex-row">
           <img
             src={selectedScreenshot?.assetPath}
             alt="Screenshot"
-            width={500}
+            className="w-[300px] h-[300px] object-contain"
           />
         </div>
 
-        <div className="flex justify-center p-1 pt-2">
+        <div className="flex flex-col justify-center p-1 pt-2 max-w-[50%]">
           <button
             onClick={() =>
               generateCode(selectedScreenshot?.filePath, (response) => {
@@ -74,14 +75,14 @@ export const MainAppContainer = () => {
           </button>
         </div>
 
-        <div>
+        <div className="max-w-[50%]">
           <pre>
-            <p>{response}</p>
+            <div className="break-words">{response}</div>
           </pre>
         </div>
       </div>
 
-      <div id="preview">
+      <div id="preview flex-1">
         <div dangerouslySetInnerHTML={{__html: response ?? ""}}></div>
       </div>
     </div>
