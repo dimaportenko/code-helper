@@ -51,7 +51,7 @@ export const MainAppContainer = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-start gap-6 max-w-[50%] overflow-y-auto">
+      <div className="flex flex-col items-start gap-6 max-w-[50%]">
 
         <h1>{selectedScreenshot?.assetPath.split("%2F").at(-1)}</h1>
 
@@ -59,7 +59,7 @@ export const MainAppContainer = () => {
           <img
             src={selectedScreenshot?.assetPath}
             alt="Screenshot"
-            className="w-[300px] h-[300px] object-contain"
+            className="w-[300px] max-h-[300px] object-contain"
           />
         </div>
 
@@ -75,7 +75,7 @@ export const MainAppContainer = () => {
           </button>
         </div>
 
-        <div className="max-w-[50%]">
+        <div className="max-w-full overflow-auto">
           <pre>
             <div className="break-words">{response}</div>
           </pre>
