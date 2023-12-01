@@ -1,6 +1,11 @@
 import { invoke } from "@tauri-apps/api";
 import "./App.css";
 
+import AceEditor from "react-ace";
+
+import "ace-builds/src-noconflict/mode-html";
+import "ace-builds/src-noconflict/theme-solarized_light";
+
 import { ScreenshotList } from "./screenshots/ScreenshotList";
 import { useState } from "react";
 import { ScreenshotItem } from "./screenshots/useScreenshotList";
@@ -52,7 +57,6 @@ export const MainAppContainer = () => {
       </div>
 
       <div className="flex flex-col items-start gap-6 max-w-[50%]">
-
         <h1>{selectedScreenshot?.assetPath.split("%2F").at(-1)}</h1>
 
         <div className="flex flex-row">
@@ -76,14 +80,19 @@ export const MainAppContainer = () => {
         </div>
 
         <div className="max-w-full overflow-auto">
-          <pre>
-            <div className="break-words">{response}</div>
-          </pre>
+          <AceEditor
+            mode="html"
+            theme="solarized_light"
+            value={response ?? ""}
+            onChange={(newResponse) => setResponse(newResponse)}
+            name="UNIQUE_ID_OF_DIV"
+            editorProps={{ $blockScrolling: true }}
+          />
         </div>
       </div>
 
       <div id="preview flex-1">
-        <div dangerouslySetInnerHTML={{__html: response ?? ""}}></div>
+        <div dangerouslySetInnerHTML={{ __html: response ?? "" }}></div>
       </div>
     </div>
   );

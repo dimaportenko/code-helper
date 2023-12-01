@@ -15,7 +15,9 @@
 
 - [ ] add eslint and prettier
 - [x] copy codesnap OpenAI logic
-- [ ] display openAI result in the main window
+- [x] display openAI result in the main window
+- [x] code editor for AI response
+- [ ] add loading indicator for AI response
 
 - [x] add cancel screenshot on ESC press
 - [ ] compress the screenshot image

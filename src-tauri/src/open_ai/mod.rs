@@ -1,7 +1,5 @@
 mod api;
 
-use std::error::Error;
-
 use crate::utils::file::encode_image_to_base64;
 use crate::utils::temp::OPEN_API_KEY;
 

@@ -1,4 +1,3 @@
-use reqwest;
 use serde::Deserialize;
 use serde_json::{json, Value};
 use std::error::Error;
