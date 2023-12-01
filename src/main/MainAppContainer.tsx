@@ -35,6 +35,7 @@ const generateCode = (
 };
 
 export const MainAppContainer = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<string | undefined>("");
   const [selectedScreenshot, setSelectedScreenshot] = useState<
     ScreenshotItem | undefined
@@ -69,14 +70,18 @@ export const MainAppContainer = () => {
 
         <div className="flex flex-col justify-center p-1 pt-2 max-w-[50%]">
           <button
-            onClick={() =>
+            onClick={() => {
+              setIsLoading(true);
               generateCode(selectedScreenshot?.filePath, (response) => {
                 setResponse(response);
+                setIsLoading(false);
               })
-            }
+            }}
           >
             Generate Code
           </button>
+
+          {isLoading && <div>Loading...</div>}
         </div>
 
         <div className="max-w-full overflow-auto">
